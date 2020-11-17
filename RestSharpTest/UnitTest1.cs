@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Collections.Generic;
+using System.Net;
 
 namespace RestSharpTest
 {
@@ -58,7 +59,36 @@ namespace RestSharpTest
             Assert.AreEqual(15000, dataResponse.Salary);
 
         }
+        /// <summary>
+        /// UC3
+        /// Tests the add multiple entries. POST
+        /// </summary>
+        [TestMethod]
+        public void TestAddMultipleEntriesUsingPostOperation()
+        {
+            ////Add multiple entries
+            ////Created a list
+            List<Employee> employeeList = new List<Employee>();
+            employeeList.Add(new Employee { name = "Girish", Salary = 40000 });
+            employeeList.Add(new Employee { name = "Harsh", Salary = 50000 });
 
+            foreach (Employee employee in employeeList)
+            {
+                ////Used post method to add Data.
+                ////"/employees" will append to the url
+                RestRequest request = new RestRequest("/employees", Method.POST);
+                JObject jObject = new JObject();
+                jObject.Add("name", employee.name);
+                jObject.Add("salary", employee.Salary);
+                request.AddParameter("application/json", jObject, ParameterType.RequestBody);
+                IRestResponse response = client.Execute(request);
+                //Assert
+                Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+                //derserializing object for assert and checking test case
+                Employee dataResponse = JsonConvert.DeserializeObject<Employee>(response.Content);
+                Assert.AreEqual(employee.name, dataResponse.name);
+            }
+        }
 
 
     }
