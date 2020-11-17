@@ -116,7 +116,22 @@ namespace RestSharpTest
             //asserting for salary
             Assert.AreEqual(dataResponse.Salary, "300000");
         }
-
+        /// <summary>
+        /// UC5
+        /// Tests the delete operation.
+        /// </summary>
+        [TestMethod]
+        public void TestDeleteDataUsingDeleteOperation()
+        {
+            ////Arrange
+            ////Employee with ID 3 will be deleted
+            ///Delete command used
+            RestRequest request = new RestRequest("employees/3", Method.DELETE);
+            //Act
+            IRestResponse response = client.Execute(request);
+            //Assert
+            Assert.AreEqual(response.StatusCode, System.Net.HttpStatusCode.OK);
+        }
 
     }
 }
